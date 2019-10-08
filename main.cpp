@@ -6,7 +6,7 @@
 
 #define FILE_TEXT_OUT "/tmp/out.txt"
 // read metadata command
-// ffmpeg -i video2.mp4 -f ffmetadata out.txt -y
+// ffmpeg -i video_encode.mp4 -f ffmetadata out.txt -y
 // add title
 // ffmpeg -i video.mp4 -strict -2 -metadata title="Movie Title" video2.mp4
 using namespace std;
