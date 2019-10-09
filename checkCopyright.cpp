@@ -44,7 +44,7 @@ static char *decoding_table = NULL;
 /*****************RSA config*****************/
 unsigned char decrypted[MAX_LEN_DECRYPT]={};
 int padding = RSA_PKCS1_PADDING;
-/*
+
 unsigned char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
 "MIIEowIBAAKCAQEAy8Dbv8prpJ/0kKhlGeJYozo2t60EG8L0561g13R29LvMR5hy\n"\
 "vGZlGJpmn65+A4xHXInJYiPuKzrKUnApeLZ+vw1HocOAZtWK0z3r26uA8kQYOKX9\n"\
@@ -72,8 +72,8 @@ unsigned char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
 "w6z2vEfRVQDq4Hm4vBzjdi3QfYLNkTiTqLcvgWZ+eX44ogXtdTDO7c+GeMKWz4XX\n"\
 "uJSUVL5+CVjKLjZEJ6Qc2WZLl94xSwL71E41H4YciVnSCQxVc4Jw\n"\
 "-----END RSA PRIVATE KEY-----\n";
-*/
-unsigned char privateKey[]="-----BEGIN RSA PRIVATE KEY-----\n"\
+
+unsigned char privateKeyMeta[]="-----BEGIN RSA PRIVATE KEY-----\n"\
 "MIICWwIBAAKBgGeMDtmIvE98NuXVp2zlabOTtZrGe0CAG5LDQwW6d401OobeEGfJ\n"\
 "oSXvNpbtq4JmgvxH/lGGfUipQvyRG3bAzQ69Wqa/indhXLBK65vC7izjdcgzB6IV\n"\
 "eBmyz/zy3cgKNT9r2bqhE5QWYB2W/Uv3PTtY0AWc2lfNTAX+LR0E41MxAgMBAAEC\n"\
@@ -414,8 +414,8 @@ std::string exec(const char* cmd) {
 /****************************************/
 // read file FILE_TEXT_OUT and get title
 std::string readFileTextOut(){
-        //FILE *f1 = fopen(FILE_TEXT_OUT, "r");
-        std::string containTitle = "title=";
+//        std::string containTitle = "title=";
+        std::string containTitle = "Title";
         std::ifstream input(FILE_TEXT_OUT);
         for( std::string line; getline(input, line );){
                 std::size_t found = line.find(containTitle);
@@ -423,7 +423,8 @@ std::string readFileTextOut(){
                         #if PRINT_LOG
                             cout << "index: " << found << endl << "all line: " << line << endl;
                         #endif
-                        return line.substr(6, line.length() - 8) + "=";
+                        found = line.find(":");
+                        return line.substr(found + 2, line.length() - found - 2);
                 }
         }
         return "nothing";
@@ -432,7 +433,8 @@ std::string readFileTextOut(){
 /*****************************************/
 //get title of file
 string getTitleFile(string fileIn){
-    string cmd = "ffmpeg -i " + fileIn + " -f ffmetadata " + FILE_TEXT_OUT + " -y";
+//    string cmd = "ffmpeg -i " + fileIn + " -f ffmetadata " + FILE_TEXT_OUT + " -y";
+    string cmd = "exiftool " + fileIn + " > " + FILE_TEXT_OUT;
     string result = exec(cmd.c_str());
     #if PRINT_LOG
         cout << "result = " << result << endl;
@@ -485,7 +487,7 @@ int checkMetadata(string fileIn){
 
     // step 3 decode RSA
     memset(decrypted, 0, MAX_LEN_DECRYPT);
-    int decript_length = private_decrypt(enB64Poi, 128, privateKey, decrypted);
+    int decript_length = private_decrypt(enB64Poi, 128, privateKeyMeta, decrypted);
     if (decript_length == -1){
         #if PRINT_LOG
             cout << "step3: decode RSA false" << endl;

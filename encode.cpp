@@ -228,15 +228,16 @@ int encodeMetaData(string fileIn){
             #endif
             return 0;
         }
-        string cmd = "ffmpeg -i " + fileIn +  " -codec copy -strict -2 -metadata title=\"" + title + "\" " + fileOut + " -y";
+//        string cmd = "ffmpeg -i " + fileIn +  " -codec copy -strict -2 -metadata title=\"" + title + "\" " + fileOut + " -y";
+        string cmd = "exiftool -overwrite_original -title=\"" + title + "\" " + fileIn;
         string resultCmd = exec(cmd.c_str());
         #if PRINTLOG            
             cout << "cmd = " << cmd << endl;               
             cout << "result cmd = " << resultCmd << endl;               
         #endif
 
-        cmd = "mv " + fileOut + " " + fileIn;
-        resultCmd = exec(cmd.c_str());
+        // cmd = "mv " + fileOut + " " + fileIn;
+        // resultCmd = exec(cmd.c_str());
         return 1;
 
     } else {  /* fread failed */
