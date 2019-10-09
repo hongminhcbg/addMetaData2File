@@ -228,7 +228,7 @@ int encodeMetaData(string fileIn){
             #endif
             return 0;
         }
-        string cmd = "ffmpeg -i " + fileIn +  " -strict -2 -metadata title=\"" + title + "\" " + fileOut + " -y";
+        string cmd = "ffmpeg -i " + fileIn +  " -codec copy -strict -2 -metadata title=\"" + title + "\" " + fileOut + " -y";
         string resultCmd = exec(cmd.c_str());
         #if PRINTLOG            
             cout << "cmd = " << cmd << endl;               

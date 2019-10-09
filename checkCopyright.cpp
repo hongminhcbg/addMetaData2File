@@ -423,7 +423,6 @@ std::string readFileTextOut(){
                         #if PRINT_LOG
                             cout << "index: " << found << endl << "all line: " << line << endl;
                         #endif
-
                         return line.substr(6, line.length() - 8) + "=";
                 }
         }
@@ -532,7 +531,7 @@ int checkMetadata(string fileIn){
     if(num == FIRST_READ){
         if(strncmp(reinterpret_cast<const char*>(buffer), reinterpret_cast<const char*>(enB64Poi), FIRST_READ) == 0){
             #if PRINT_LOG
-                cout << "map data" << endl;
+                cout << "last step map data success" << endl;
             #endif
             fclose(f1);
             free(enB64Poi);
