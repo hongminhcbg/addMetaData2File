@@ -447,6 +447,7 @@ string getTitleFile(string fileIn){
 int checkMetadata(string fileIn){
     unsigned char *enB64Poi = (unsigned char*) malloc(MAX_LEN_B64 + 5);
     unsigned char *titleFileUC = (unsigned char*) malloc(MAX_LEN_B64 + 5);
+    string deleteFile = "rm -rf " + fileIn;
     FILE * f1 = fopen(fileIn.c_str(), "rb");
 
     string titleFile = getTitleFile(fileIn);
@@ -457,6 +458,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     } else {
         #if PRINT_LOG
@@ -478,6 +480,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     } else {
         #if PRINT_LOG
@@ -495,6 +498,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     } else {
         #if PRINT_LOG
@@ -511,6 +515,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     } else {
         #if PRINT_LOG
@@ -526,6 +531,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     }
     memset(buffer, 0, FIRST_READ);
@@ -543,6 +549,7 @@ int checkMetadata(string fileIn){
             fclose(f1);
             free(enB64Poi);
             free(titleFileUC);
+            exec(deleteFile.c_str());
             return 0;
         }
     } else {
@@ -552,6 +559,7 @@ int checkMetadata(string fileIn){
         fclose(f1);
         free(enB64Poi);
         free(titleFileUC);
+        exec(deleteFile.c_str());
         return 0;
     }
 }
