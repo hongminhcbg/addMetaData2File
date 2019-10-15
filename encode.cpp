@@ -13,7 +13,7 @@ using namespace std;
 
 #define NUM_ALPHA 60 //max = 180 (180/ 3 * 4 = 240)
 #define MAX_LEN_B64 (256)
-#define PRINTLOG 1
+#define PRINTLOG 0
 unsigned char buffer[NUM_ALPHA + 5];
 unsigned char *encoded_data = (unsigned char*) malloc(256);
 /**********************************/
@@ -138,7 +138,7 @@ std::string exec(const char* cmd) {
 
 /********************************************************/
 
-// convert 128 bytes after RSA to string 256 bytes
+// convert char* to string
 string getTitle(unsigned char *str, int length){
     string result = "";
     for(int i = 0; i < length; i++){
@@ -177,6 +177,10 @@ int encodeMetaData(string fileIn){
     if ( num == NUM_ALPHA ) {  /* fread success */
         #if PRINTLOG
             printf("step1: Read first %d bytes success \n", NUM_ALPHA);
+            cout << "data read first in file" << endl;
+            for(int i = 1; i <= 60; i++){
+                printf("%02X%c", buffer[i-1], (i%20==0) ? '\n' : '\t');
+            }
         #endif
 
         buffer[NUM_ALPHA + 1] = '\0';
@@ -184,7 +188,10 @@ int encodeMetaData(string fileIn){
         enB64Poi = base64_encode(buffer, num, &b64OutLen); 
         if(enB64Poi != NULL){
             #if PRINTLOG
-                printf("step2: encode base 64 success b64OutLen = %d\n", b64OutLen);
+                printf("step2: encode base 64 first time success b64OutLen = %d\n", b64OutLen);
+                for(int i = 1; i <= b64OutLen; i++){
+                    printf("%02X%c", buffer[i-1], (i%20==0) ? '\n' : '\t');
+                }
             #endif
         } else {
             #if PRINTLOG

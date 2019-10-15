@@ -21,13 +21,12 @@ using namespace std;
 
 #define uc unsigned char
 #define ll long long int
-#define PRINT_LOG 1
+#define PRINT_LOG 0
 #define NUM_ALPHA (256)
 #define FIRST_READ (60)
 #define MAX_LEN_B64 (256)
 #define MAX_FIRST_READ (10)
 #define MAX_LEN_DECRYPT (256)
-#define FILE_TEXT_OUT "/tmp/out.txt"
 
 uc buffer[NUM_ALPHA + 1];
 int ReadfileBytes[12] = {120, 99, 72, 180, 60, 45, 90, 75, 150, 144, 0, 0};
@@ -411,36 +410,21 @@ std::string exec(const char* cmd) {
     pclose(pipe);
     return result;
 }
-/****************************************/
-// read file FILE_TEXT_OUT and get title
-std::string readFileTextOut(){
-//        std::string containTitle = "title=";
-        std::string containTitle = "Title";
-        std::ifstream input(FILE_TEXT_OUT);
-        for( std::string line; getline(input, line );){
-                std::size_t found = line.find(containTitle);
-                if ( found == 0) {
-                        #if PRINT_LOG
-                            cout << "index: " << found << endl << "all line: " << line << endl;
-                        #endif
-                        found = line.find(":");
-                        return line.substr(found + 2, line.length() - found - 2);
-                }
-        }
-        return "nothing";
-}
 
 /*****************************************/
 //get title of file
 string getTitleFile(string fileIn){
-//    string cmd = "ffmpeg -i " + fileIn + " -f ffmetadata " + FILE_TEXT_OUT + " -y";
-    string cmd = "exiftool " + fileIn + " > " + FILE_TEXT_OUT;
+    string cmd = "exiftool " + fileIn + " | grep Title";
     string result = exec(cmd.c_str());
     #if PRINT_LOG
-        cout << "result = " << result << endl;
+        cout << "result command read title = " << result << endl;
     #endif
-    
-    return readFileTextOut();    
+    std::size_t found = result.find(":");
+    if (found != string::npos){
+        return result.substr(found + 2, result.length() - found - 2);
+    } else {
+        return "nothing";
+    } 
 }
 /***********************************************/
 
@@ -520,6 +504,7 @@ int checkMetadata(string fileIn){
     } else {
         #if PRINT_LOG
             cout << "step4: decode base 64 second time success, b64OutLen = "<< b64OutLen << endl;
+
         #endif
     }
 
@@ -545,7 +530,18 @@ int checkMetadata(string fileIn){
             free(enB64Poi);
             free(titleFileUC);
             return 1;
-        } else {
+        } else {    
+            #if PRINT_LOG
+                cout << "data read first in file" << endl;
+                for(int i = 1; i <= FIRST_READ; i++){
+                    printf("%02X%c", buffer[i-1], (i%20==0) ? '\n' : '\t');
+                }                                                         
+                cout << endl << "data decode in title" << endl;
+                for(int i = 1; i <= FIRST_READ; i++){
+                    printf("%02X%c", enB64Poi[i-1], (i%20==0) ? '\n' : '\t');
+                }
+                cout << endl;
+            #endif
             fclose(f1);
             free(enB64Poi);
             free(titleFileUC);
