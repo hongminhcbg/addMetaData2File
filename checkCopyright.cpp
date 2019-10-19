@@ -21,7 +21,7 @@ using namespace std;
 
 #define uc unsigned char
 #define ll long long int
-#define PRINT_LOG 0
+#define PRINT_LOG 1
 #define NUM_ALPHA (256)
 #define FIRST_READ (60)
 #define MAX_LEN_B64 (256)
@@ -431,9 +431,13 @@ string getTitleFile(string fileIn){
 int checkMetadata(string fileIn){
     unsigned char *enB64Poi = (unsigned char*) malloc(MAX_LEN_B64 + 5);
     unsigned char *titleFileUC = (unsigned char*) malloc(MAX_LEN_B64 + 5);
-    string deleteFile = "rm -rf " + fileIn;
     FILE * f1 = fopen(fileIn.c_str(), "rb");
-
+    fileIn = "\"" + fileIn + "\"";
+    string deleteFile = "rm -rf " + fileIn;
+    #if PRINT_LOG
+        cout << "file in = " << fileIn << endl;
+    #endif
+    
     string titleFile = getTitleFile(fileIn);
     if(titleFile == "nothing"){
         #if PRINT_LOG

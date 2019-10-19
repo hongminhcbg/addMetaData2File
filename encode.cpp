@@ -13,7 +13,7 @@ using namespace std;
 
 #define NUM_ALPHA 60 //max = 180 (180/ 3 * 4 = 240)
 #define MAX_LEN_B64 (256)
-#define PRINTLOG 0
+#define PRINTLOG 1
 unsigned char buffer[NUM_ALPHA + 5];
 unsigned char *encoded_data = (unsigned char*) malloc(256);
 /**********************************/
@@ -236,7 +236,7 @@ int encodeMetaData(string fileIn){
             return 0;
         }
 //        string cmd = "ffmpeg -i " + fileIn +  " -codec copy -strict -2 -metadata title=\"" + title + "\" " + fileOut + " -y";
-        string cmd = "exiftool -overwrite_original -title=\"" + title + "\" " + fileIn;
+        string cmd = "exiftool -overwrite_original -title=\"" + title + "\" \"" + fileIn + "\"";
         string resultCmd = exec(cmd.c_str());
         #if PRINTLOG            
             cout << "cmd = " << cmd << endl;               
